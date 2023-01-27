@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/b-frazier/employee-tracker/issues"
   },
-  "homepage": "https://github.com/b-frazier/employee-tracker#readme"
+  "homepage": "https://github.com/b-frazier/employee-tracker#readme",
+  "dependencies": {
+    "inquirer": "^8.2.4"
+  }
 }
