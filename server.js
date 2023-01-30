@@ -55,6 +55,9 @@ function start() {
         case "Update an employee role":
           addOption();
           break;
+        case "Nothing more to do":
+          stop();
+          break;
       }
     });
 }
