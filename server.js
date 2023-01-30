@@ -1,6 +1,6 @@
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
-require("dotenv").config;
+require("dotenv").config();
 
 const db = mysql.createConnection(
   {
@@ -9,7 +9,8 @@ const db = mysql.createConnection(
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
   },
-  console.log(`connected to the database: company_db`)
+  console.log(`connected to the database: company_db`),
+  start()
 );
 
 function start() {
@@ -26,6 +27,7 @@ function start() {
           "Add a role",
           "Add an employee",
           "Update an employee role",
+          "Nothing more to do",
         ],
         name: "action",
       },
@@ -33,7 +35,7 @@ function start() {
     .then(function (input) {
       switch (input.action) {
         case "View all departments":
-          viewAll();
+          viewAll("departments");
           break;
         case "View all roles":
           viewAll();
@@ -55,4 +57,11 @@ function start() {
           break;
       }
     });
+}
+
+function viewAll(option) {
+  if (option === "departments") {
+    console.log("show me the departments");
+  }
+  start();
 }
