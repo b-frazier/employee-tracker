@@ -13,20 +13,46 @@ const db = mysql.createConnection(
 );
 
 function start() {
-  inquirer.prompt([
-    {
-      type: "list",
-      message: "What would you like to do?",
-      choices: [
-        "View all departments",
-        "View all roles",
-        "View all employees",
-        "Add a department",
-        "Add a role",
-        "Add an employee",
-        "Update an employee role",
-      ],
-      name: "action",
-    },
-  ]);
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        message: "What would you like to do?",
+        choices: [
+          "View all departments",
+          "View all roles",
+          "View all employees",
+          "Add a department",
+          "Add a role",
+          "Add an employee",
+          "Update an employee role",
+        ],
+        name: "action",
+      },
+    ])
+    .then(function (input) {
+      switch (input.action) {
+        case "View all departments":
+          viewAll();
+          break;
+        case "View all roles":
+          viewAll();
+          break;
+        case "View all employees":
+          viewAll();
+          break;
+        case "Add a department":
+          addOption();
+          break;
+        case "Add a role":
+          addOption();
+          break;
+        case "Add an employee":
+          addOption();
+          break;
+        case "Update an employee role":
+          addOption();
+          break;
+      }
+    });
 }
