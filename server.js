@@ -180,19 +180,13 @@ function addRole() {
         .then((newId) => {
           db.promise().query(
             `INSERT INTO role (department_id, title, salary) VALUES (?, ?, ?)`,
-            [newId, answer.newRole, answer.roleSal],
-            (err, res) => {
-              if (err) {
-                console.log(err);
-              } else {
-                db.query(`SELECT * FROM role`, function (err, res) {
-                  console.table(res);
-                  if (err) console.log(err);
-                  start();
-                });
-              }
-            }
+            [newId, answer.newRole, answer.roleSal]
           );
+          db.query(`SELECT * FROM role`, function (err, res) {
+            console.table(res);
+            if (err) console.log(err);
+          });
+          start();
         });
     });
 }
