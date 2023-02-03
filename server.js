@@ -37,19 +37,19 @@ function start() {
           viewAll('department');
           break;
         case 'View all roles':
-          viewAll('roles');
+          viewAll('role');
           break;
         case 'View all employees':
-          viewAll('employees');
+          viewAll('employee');
           break;
         case 'Add a department':
-          addOption();
+          addOption('department');
           break;
         case 'Add a role':
-          addOption();
+          addOption('role');
           break;
         case 'Add an employee':
-          addOption();
+          addOption('employee');
           break;
         case 'Update an employee role':
           addOption();
@@ -67,17 +67,20 @@ function viewAll(option) {
       console.table(res);
       if (err) console.log(err);
     });
-  } else if (option === 'roles') {
+  } else if (option === 'role') {
     db.query(`SELECT * FROM role`, function (err, res) {
       console.table(res);
       if (err) console.log(err);
     });
-  } else if (option === 'employees') {
+  } else if (option === 'employee') {
     db.query(`SELECT * FROM employee`, function (err, res) {
       console.table(res);
       if (err) console.log(err);
     });
   }
+  start();
 }
+
+function addOption(option) {}
 
 start();
