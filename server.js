@@ -213,8 +213,6 @@ function addEmp() {
               .query(`SELECT id FROM role WHERE title = ?`, answer.empRole)
               .then((ans) => {
                 let roleId = ans[0].map((obj) => obj.id);
-                console.log('Role id:', roleId[0]);
-                console.log('Manager id again:', managerId);
                 resolve([managerId, roleId[0]]);
               });
           });
@@ -273,7 +271,6 @@ function updateRole() {
         .query(`SELECT id FROM employee WHERE first_name = '${answer.empList}'`)
         .then((ans) => {
           let empId = ans[0].map((obj) => obj.id);
-          console.log('employee id:', empId[0]);
           return empId[0];
         })
         .then((empId) => {
@@ -282,11 +279,15 @@ function updateRole() {
               .query(`SELECT id FROM role WHERE title = '${answer.newRole}'`)
               .then((ans) => {
                 let newRoleId = ans[0].map((obj) => obj.id);
-                console.log('employee id:', empId);
-                console.log('new role id:', newRoleId[0]);
                 resolve([empId, newRoleId[0]]);
               });
           });
+        })
+        .then(([empId, newRoleId]) => {
+          db.promise().query(
+            `UPDATE employee SET role_id = ${newRoleId} WHERE id = ${empId}`
+          );
+          return start();
         });
     });
 }
