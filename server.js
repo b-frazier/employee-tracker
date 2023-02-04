@@ -156,4 +156,15 @@ function addRole() {
     });
 }
 
+function addEmp() {
+  const rollChoice = () =>
+    db
+      .promise()
+      .query(`SELECT * FROM role`)
+      .then((rows) => {
+        let roles = rows[0].map((obj) => obj.name);
+        return roles;
+      });
+}
+
 start();
