@@ -236,17 +236,31 @@ function updateRole() {
       .promise()
       .query(`SELECT * FROM employee`)
       .then((rows) => {
-        let employees = rows[0].map((obj) => obj.id);
-        return employees[0];
+        let employees = rows[0].map((obj) => obj.first_name);
+        return employees;
       });
-  inquirer.prompt([
-    {
-      type: 'list',
-      message: 'What employee would you like to update?',
-      name: 'empList',
-      choices: empList,
-    },
-  ]);
+  inquirer
+    .prompt([
+      {
+        type: 'list',
+        message: 'What employee would you like to update?',
+        name: 'empList',
+        choices: empList,
+      },
+    ])
+    .then((answer) => {
+      db.promise()
+        .query(
+          `SELECT role_id FROM employee WHERE first_name = ?`,
+          answer.empList
+        )
+        .then((ans) => {
+          console.log(ans);
+          let empRoleId = ans[0].map((obj) => obj.role_id);
+          console.log('employee role id:', empRoleId[0]);
+          return empRoleId[0];
+        });
+    });
 }
 
 start();
