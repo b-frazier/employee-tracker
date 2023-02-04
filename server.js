@@ -292,7 +292,4 @@ function updateRole() {
     });
 }
 
-//UPDATE employee SET role_id = ? WHERE id = empId
-//get role_id from selected choice
-
 start();
