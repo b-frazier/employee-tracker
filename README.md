@@ -7,6 +7,7 @@ This is a CLI that allows the user to view, add and update a company employee da
 ## Table of Contents
 
 - [Installation](#installation)
+- [Demonstration](#demonstration)
 - [Usage](#usage)
 - [License](#license)
 - [Contributing](#contributing)
@@ -28,6 +29,16 @@ NOTE:
 Be sure to have Express.js and MySQL2 installed in your npm.
 
 To do so, run `npm i express@4.17.1` and `npm i mysql@2.2.5` before entering the MySql console.
+
+## Demonstration
+
+### Screenshot
+
+<img src="./assets/demo.png" width="700">
+
+### Walk through video
+
+https://drive.google.com/file/d/1aDws2Bgfgi3jCZ9eXYC6rNbVJUYAS4sW/view
 
 ## Usage
 
