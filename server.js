@@ -239,28 +239,59 @@ function updateRole() {
         let employees = rows[0].map((obj) => obj.first_name);
         return employees;
       });
+  const newRoleChoice = () =>
+    db
+      .promise()
+      .query(`SELECT * FROM role`)
+      .then((rows) => {
+        let roles = rows[0].map((obj) => obj.title);
+        return roles;
+      });
   inquirer
     .prompt([
       {
         type: 'list',
         message: 'What employee would you like to update?',
         name: 'empList',
-        choices: empList,
+        choices: async () => {
+          const employees = await empList();
+          return employees;
+        },
+      },
+      {
+        type: 'list',
+        message: 'What is their new role?',
+        name: 'newRole',
+        choices: async () => {
+          const roles = await newRoleChoice();
+          return roles;
+        },
       },
     ])
     .then((answer) => {
       db.promise()
-        .query(
-          `SELECT role_id FROM employee WHERE first_name = ?`,
-          answer.empList
-        )
+        .query(`SELECT id FROM employee WHERE first_name = '${answer.empList}'`)
         .then((ans) => {
-          console.log(ans);
-          let empRoleId = ans[0].map((obj) => obj.role_id);
-          console.log('employee role id:', empRoleId[0]);
-          return empRoleId[0];
+          let empId = ans[0].map((obj) => obj.id);
+          console.log('employee id:', empId[0]);
+          return empId[0];
+        })
+        .then((empId) => {
+          return new Promise((resolve, reject) => {
+            db.promise()
+              .query(`SELECT id FROM role WHERE title = '${answer.newRole}'`)
+              .then((ans) => {
+                let newRoleId = ans[0].map((obj) => obj.id);
+                console.log('employee id:', empId);
+                console.log('new role id:', newRoleId[0]);
+                resolve([empId, newRoleId[0]]);
+              });
+          });
         });
     });
 }
+
+//UPDATE employee SET role_id = ? WHERE id = empId
+//get role_id from selected choice
 
 start();
