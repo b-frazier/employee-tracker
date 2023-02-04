@@ -225,8 +225,8 @@ function addEmp() {
             `INSERT INTO employee (manager_id, first_name, last_name, role_id) VALUES (?, ?, ?, ?)`,
             [managerId, answer.firstName, answer.lastName, roleId]
           );
+          return start();
         });
-      return start();
     });
 }
 
