@@ -9,7 +9,11 @@ const db = mysql.createConnection(
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
   },
-  console.log(`connected to the database: company_db`)
+  console.log(
+    `----- Successfully connected to the company employee database. -----`
+  ),
+  console.log(`Welcome! Let's get started!`),
+  console.log(`________________________________`)
 );
 
 function start() {
@@ -64,16 +68,19 @@ function start() {
 function viewAll(option) {
   if (option === 'department') {
     db.query(`SELECT * FROM department`, function (err, res) {
+      console.log(`Now viewing all company departments`);
       console.table(res);
       if (err) console.log(err);
     });
   } else if (option === 'role') {
     db.query(`SELECT * FROM role`, function (err, res) {
+      console.log(`Now viewing all company roles`);
       console.table(res);
       if (err) console.log(err);
     });
   } else if (option === 'employee') {
     db.query(`SELECT * FROM employee`, function (err, res) {
+      console.log(`Now viewing all company employees`);
       console.table(res);
       if (err) console.log(err);
     });
@@ -97,6 +104,7 @@ function addDpt() {
             console.log(err);
           } else {
             db.query(`SELECT * FROM department`, function (err, res) {
+              console.log(`Successfully created new department`);
               console.table(res);
               if (err) console.log(err);
               start();
@@ -148,6 +156,7 @@ function addRole() {
             [newId, answer.newRole, answer.roleSal]
           );
           db.query(`SELECT * FROM role`, function (err, res) {
+            console.log(`Successfully created new role`);
             console.table(res);
             if (err) console.log(err);
           });
@@ -199,12 +208,10 @@ function addEmp() {
       },
     ])
     .then((answer) => {
-      console.log(answer);
       db.promise()
         .query(`SELECT id FROM employee WHERE first_name = ?`, answer.manager)
         .then((ans) => {
           let managerId = ans[0].map((obj) => obj.id);
-          console.log('Manager id:', managerId[0]);
           return managerId[0];
         })
         .then((managerId) => {
@@ -218,10 +225,10 @@ function addEmp() {
           });
         })
         .then(([managerId, roleId]) => {
-          console.log('Manager id:', managerId, 'Role id:', roleId);
           db.promise().query(
             `INSERT INTO employee (manager_id, first_name, last_name, role_id) VALUES (?, ?, ?, ?)`,
-            [managerId, answer.firstName, answer.lastName, roleId]
+            [managerId, answer.firstName, answer.lastName, roleId],
+            console.log(`Successfully added new employee`)
           );
           return start();
         });
@@ -284,9 +291,12 @@ function updateRole() {
           });
         })
         .then(([empId, newRoleId]) => {
-          db.promise().query(
-            `UPDATE employee SET role_id = ${newRoleId} WHERE id = ${empId}`
-          );
+          db
+            .promise()
+            .query(
+              `UPDATE employee SET role_id = ${newRoleId} WHERE id = ${empId}`
+            ),
+            console.log(`Successfully updated ${answer.empList}'s role`);
           return start();
         });
     });
