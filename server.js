@@ -187,32 +187,46 @@ function addEmp() {
       },
       {
         type: 'list',
-        message: 'What is the role of the employee?',
-        name: 'empRole',
-        choices: roleChoice,
-      },
-      {
-        type: 'list',
         message: 'Who will be their manager?',
         name: 'manager',
         choices: managerChoice,
+      },
+      {
+        type: 'list',
+        message: 'What is the role of the employee?',
+        name: 'empRole',
+        choices: roleChoice,
       },
     ])
     .then((answer) => {
       console.log(answer);
       db.promise()
         .query(`SELECT id FROM employee WHERE first_name = ?`, answer.manager)
-        .then((manName) => {
-          let managerId = manName[0].map((obj) => obj.id);
+        .then((ans) => {
+          let managerId = ans[0].map((obj) => obj.id);
+          console.log('Manager id:', managerId[0]);
           return managerId[0];
         })
         .then((managerId) => {
+          return new Promise((resolve, reject) => {
+            db.promise()
+              .query(`SELECT id FROM role WHERE title = ?`, answer.empRole)
+              .then((ans) => {
+                let roleId = ans[0].map((obj) => obj.id);
+                console.log('Role id:', roleId[0]);
+                console.log('Manager id again:', managerId);
+                resolve([managerId, roleId[0]]);
+              });
+          });
+        })
+        .then(([managerId, roleId]) => {
+          console.log('Manager id:', managerId, 'Role id:', roleId);
           db.promise().query(
-            `INSERT INTO employee (manager_id, first_name, last_name) VALUES (${managerId}, '${answer.firstName}', '${answer.lastName}')`
+            `INSERT INTO employee (manager_id, first_name, last_name, role_id) VALUES (?, ?, ?, ?)`,
+            [managerId, answer.firstName, answer.lastName, roleId]
           );
-          //[managerId, answer.firstName, answer.lastName, dptId];
         });
-      start();
+      return start();
     });
 }
 
