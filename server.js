@@ -230,4 +230,23 @@ function addEmp() {
     });
 }
 
+function updateRole() {
+  const empList = () =>
+    db
+      .promise()
+      .query(`SELECT * FROM employee`)
+      .then((rows) => {
+        let employees = rows[0].map((obj) => obj.id);
+        return employees[0];
+      });
+  inquirer.prompt([
+    {
+      type: 'list',
+      message: 'What employee would you like to update?',
+      name: 'empList',
+      choices: empList,
+    },
+  ]);
+}
+
 start();
