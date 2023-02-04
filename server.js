@@ -68,19 +68,19 @@ function start() {
 function viewAll(option) {
   if (option === 'department') {
     db.query(`SELECT * FROM department`, function (err, res) {
-      console.log(`Now viewing all company departments`);
+      console.log(`----- Now viewing all company departments -----`);
       console.table(res);
       if (err) console.log(err);
     });
   } else if (option === 'role') {
     db.query(`SELECT * FROM role`, function (err, res) {
-      console.log(`Now viewing all company roles`);
+      console.log(`----- Now viewing all company roles -----`);
       console.table(res);
       if (err) console.log(err);
     });
   } else if (option === 'employee') {
     db.query(`SELECT * FROM employee`, function (err, res) {
-      console.log(`Now viewing all company employees`);
+      console.log(` ----- Now viewing all company employees -----`);
       console.table(res);
       if (err) console.log(err);
     });
@@ -104,7 +104,7 @@ function addDpt() {
             console.log(err);
           } else {
             db.query(`SELECT * FROM department`, function (err, res) {
-              console.log(`Successfully created new department`);
+              console.log(`----- Successfully created new department -----`);
               console.table(res);
               if (err) console.log(err);
               start();
@@ -156,7 +156,7 @@ function addRole() {
             [newId, answer.newRole, answer.roleSal]
           );
           db.query(`SELECT * FROM role`, function (err, res) {
-            console.log(`Successfully created new role`);
+            console.log(`----- Successfully created new role -----`);
             console.table(res);
             if (err) console.log(err);
           });
@@ -228,7 +228,7 @@ function addEmp() {
           db.promise().query(
             `INSERT INTO employee (manager_id, first_name, last_name, role_id) VALUES (?, ?, ?, ?)`,
             [managerId, answer.firstName, answer.lastName, roleId],
-            console.log(`Successfully added new employee`)
+            console.log(`----- Successfully added new employee -----`)
           );
           return start();
         });
@@ -296,10 +296,17 @@ function updateRole() {
             .query(
               `UPDATE employee SET role_id = ${newRoleId} WHERE id = ${empId}`
             ),
-            console.log(`Successfully updated ${answer.empList}'s role`);
+            console.log(
+              `----- Successfully updated ${answer.empList}'s role -----`
+            );
           return start();
         });
     });
+}
+
+function stop() {
+  console.log(`----- Thanks, see you soon! -----`);
+  db.end();
 }
 
 start();
