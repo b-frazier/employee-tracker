@@ -49,7 +49,7 @@ function start() {
           addRole();
           break;
         case 'Add an employee':
-          addOption('employee');
+          addEmp();
           break;
         case 'Update an employee role':
           updateRole();
@@ -157,14 +157,63 @@ function addRole() {
 }
 
 function addEmp() {
-  const rollChoice = () =>
+  const roleChoice = () =>
     db
       .promise()
       .query(`SELECT * FROM role`)
       .then((rows) => {
-        let roles = rows[0].map((obj) => obj.name);
+        let roles = rows[0].map((obj) => obj.title);
         return roles;
       });
+  const managerChoice = () =>
+    db
+      .promise()
+      .query(`SELECT * FROM employee`)
+      .then((rows) => {
+        let manager = rows[0].map((obj) => obj.first_name);
+        return manager;
+      });
+  inquirer
+    .prompt([
+      {
+        type: 'input',
+        message: 'Enter employee first name',
+        name: 'firstName',
+      },
+      {
+        type: 'input',
+        message: 'Enter employee last name',
+        name: 'lastName',
+      },
+      {
+        type: 'list',
+        message: 'What is the role of the employee?',
+        name: 'empRole',
+        choices: roleChoice,
+      },
+      {
+        type: 'list',
+        message: 'Who will be their manager?',
+        name: 'manager',
+        choices: managerChoice,
+      },
+    ])
+    .then((answer) => {
+      console.log(answer);
+      db.promise()
+        .query(`SELECT id FROM employee WHERE first_name = ?`, answer.manager)
+        .then((manName) => {
+          let managerId = manName[0].map((obj) => obj.id);
+          return managerId[0];
+        })
+        .then((managerId) => {
+          db.promise().query(
+            `INSERT INTO employee (manager_id, first_name, last_name) VALUES (${managerId}, '${answer.firstName}', '${answer.lastName}')`
+          );
+          //[managerId, answer.firstName, answer.lastName, dptId];
+        });
+      start();
+    });
 }
 
 start();
