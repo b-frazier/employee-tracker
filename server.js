@@ -43,7 +43,7 @@ function start() {
           viewAll('employee');
           break;
         case 'Add a department':
-          addOption('department');
+          addDpt();
           break;
         case 'Add a role':
           addRole();
@@ -81,65 +81,30 @@ function viewAll(option) {
   start();
 }
 
-function addOption(option) {
-  if (option === 'department') {
-    inquirer
-      .prompt({
-        type: 'input',
-        message: 'What department would you like to add?',
-        name: 'newDept',
-      })
-      .then((answer) => {
-        db.query(
-          `INSERT INTO department (name) VALUES (?)`,
-          answer.newDept,
-          (err, res) => {
-            if (err) {
-              console.log(err);
-            } else {
-              db.query(`SELECT * FROM department`, function (err, res) {
-                console.table(res);
-                if (err) console.log(err);
-                start();
-              });
-            }
+function addDpt() {
+  inquirer
+    .prompt({
+      type: 'input',
+      message: 'What department would you like to add?',
+      name: 'newDept',
+    })
+    .then((answer) => {
+      db.query(
+        `INSERT INTO department (name) VALUES (?)`,
+        answer.newDept,
+        (err, res) => {
+          if (err) {
+            console.log(err);
+          } else {
+            db.query(`SELECT * FROM department`, function (err, res) {
+              console.table(res);
+              if (err) console.log(err);
+              start();
+            });
           }
-        );
-      });
-  } else if (option === 'role') {
-    inquirer
-      .prompt([
-        {
-          type: 'input',
-          message: 'What role would you like to add?',
-          name: 'newRole',
-        },
-        {
-          type: 'input',
-          message: 'What is the salary of this role?',
-          name: 'roleSal',
-        },
-      ])
-      .then((answer) => {
-        db.query(
-          `INSERT INTO role (department_id, title, salary) VALUES (?, ?, ?)`,
-          answer.newRole,
-          answer.roleSal,
-          (err, res) => {
-            if (err) {
-              console.log(err);
-            } else {
-              db.query(`SELECT * FROM role`, function (err, res) {
-                console.table(res);
-                if (err) console.log(err);
-                start();
-              });
-            }
-          }
-        );
-      });
-  } else if (option === 'employee') {
-  }
+        }
+      );
+    });
 }
 
 function addRole() {
